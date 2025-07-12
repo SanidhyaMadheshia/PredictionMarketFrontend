@@ -4,7 +4,7 @@
   background-image: url('../../public/beautiful-shining-stars-night-sky.jpg');
   background-size: cover;
   background-position: center;
-  display: flex;
+  /* display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
 }
