@@ -1,49 +1,3 @@
-// // app/page.tsx
-// "use client";
-// import type { NextPage } from "next";
-// import { ConnectButton, useReadContract } from "thirdweb/react";
-// import { client } from "@/lib/client";
-// import { Button } from "@/components/ui/button";
-
-// import "./landingPage.css"; // Import the CSS file for styling
-// // import {
-  // //   generatePayload,
-  // //   isLoggedIn,
-  // //   login,
-  // //   logout,
-  // // } from "@/actions/login"; // we'll create this file in the next section
-  
-  // const Page = () => {
-    //   const {data , isLoading} = useReadContract({
-      //     contract,
-      //     method: "function owner() view returns (address)",
-      //   params: [],
-      //   })
-      //   return (
-        //     <><div className="background">
-        
-        //       <ConnectButton
-        //         client={client}
-        
-        //       />
-        //     </div>
-        //     <div>
-        
-        //     <Button
-        //     onClick={()=>{
-          //       if(!isLoading) {
-            //         console.log(data);
-            //       }
-            //     }}
-            //     >GET THE URI OF TOKEN </Button>
-            //     </div>
-            //     </>
-            //   );
-            // };
-            
-            // export default Page;
-            
-            
 'use client';
 import "./landingPage.css"; // Import the CSS file for styling
 import { contract } from "@/providers/thirdwebprovider"; // Adjust the import path as necessary
@@ -52,17 +6,17 @@ import { client } from "@/lib/client";
 import { getUserRoleFromWallet } from "@/lib/auth";
 import { useEffect, useState } from "react";
 import { User } from "@/types/auth";
-// import UserDashboard from "@/components/dashboard/UserDashboard";
-// import AdminDashboard from "@/components/dashboard/AdminDashboard";
+import UserDashboard from "@/components/UserDashboard";
+import AdminDashboard from "@/components/AdminDashboard";
 
 export default function HomePage() {
   const account = useActiveAccount();
   const [user, setUser] = useState<User | null>(null);
-    const {data , isLoading} = useReadContract({
-      contract,
-      method: "function owner() view returns (address)",
+  const {data , isLoading} = useReadContract({
+    contract,
+    method: "function owner() view returns (address)",
     params: [],
-    })
+  })
 
   useEffect(() => {
     if (account?.address) {
@@ -77,17 +31,21 @@ export default function HomePage() {
     }
   }, [account]);
 
-  return isLoading ? <div>
-    <p>Loading...</p>
-  </div> :
-    
-    <div className="min-h-screen bg-gray-50 background ">
+  return isLoading ? (
+    <div className="min-h-screen bg-gray-50 background flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading...</p>
+      </div>
+    </div>
+  ) : (
+    <div className="min-h-screen bg-gray-50 background">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b ">
+      <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-2 sm:px-6 py-2 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">Web3 Dashboard</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Web3 Prediction Market</h1>
             </div>
             
             <div className="flex items-center space-x-4">
@@ -104,13 +62,7 @@ export default function HomePage() {
                 </div>
               )}
               
-              <ConnectButton
-                client={client}
-                // appMetadata={{
-                //   name: "Web3 Dashboard",
-                //   url: "https://example.com",
-                // }}
-              />
+              <ConnectButton client={client} />
             </div>
           </div>
         </div>
@@ -121,7 +73,7 @@ export default function HomePage() {
         {!account ? (
           // Not connected state
           <div className="text-center py-12">
-            <div className="max-w-md mx-auto">
+            <div className="max-w-md mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-8">
               <div className="mb-8">
                 <div className="mx-auto h-12 w-12 text-gray-400">
                   <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,19 +82,19 @@ export default function HomePage() {
                 </div>
                 <h2 className="mt-2 text-lg font-medium text-gray-900">Connect Your Wallet</h2>
                 <p className="mt-1 text-sm text-gray-500">
-                  Please connect your wallet to access the dashboard
+                  Please connect your wallet to access the prediction market
                 </p>
               </div>
               
               <div className="space-y-4">
                 <div className="border rounded-lg p-4 bg-blue-50">
                   <h3 className="font-medium text-blue-900">User Access</h3>
-                  <p className="text-sm text-blue-700">Regular users can view and edit their data</p>
+                  <p className="text-sm text-blue-700">Trade on active markets and manage your portfolio</p>
                 </div>
                 
                 <div className="border rounded-lg p-4 bg-red-50">
                   <h3 className="font-medium text-red-900">Admin Access</h3>
-                  <p className="text-sm text-red-700">Admins can manage users and system settings</p>
+                  <p className="text-sm text-red-700">Create markets, resolve outcomes, and manage the platform</p>
                 </div>
               </div>
             </div>
@@ -151,19 +103,16 @@ export default function HomePage() {
           // Connected state - show role-based dashboard
           <div>
             {user?.role === 'admin' ? (
-              // <AdminDashboard user={user} />
-              <div>
-                admin 
-              </div>
+              <AdminDashboard user={user} />
             ) : (
-              // <UserDashboard user={user} />
-              <div>
-                user
-              </div>
+              <UserDashboard user={user } />
+              // <div>
+              //   helllo
+              // </div>
             )}
           </div>
         )}
       </main>
     </div>
-  ;
+  );
 }
