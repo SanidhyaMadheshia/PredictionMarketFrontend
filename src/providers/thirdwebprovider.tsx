@@ -14,3 +14,10 @@ export const contract = getContract({
 //   params: [BigInt(1)],
 // });
 
+
+export const sepoliaChain  = sepolia
+export const tokenContract = getContract({
+  client,
+  address : "0x9920233f64F1BD459FC6ac52592b4d30AD8D1ccc",
+  chain : sepolia
+})

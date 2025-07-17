@@ -29,8 +29,9 @@ interface UserShares {
 }
 
 interface UserDashboardProps {
-  user: User;
+  user: User | null; 
 }
+
 
 const UserDashboard: React.FC<UserDashboardProps> = ({ user }) => {
   const [markets, setMarkets] = useState<Market[]>([]);
